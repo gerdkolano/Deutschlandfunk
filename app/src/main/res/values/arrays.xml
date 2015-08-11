@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="listArray">
+    <item>Nur wenn Wi-Fi erreichbar ist</item>
+    <item>Auch über Mobil-Telefon-Netz</item>
+  </string-array>
+  <string-array name="listValues">
+    <item>Wi-Fi</item>
+    <item>Any</item>
+  </string-array>
+  <string-array name="sendungArray">
+    <item>Forschung aktuell</item>
+    <item>Computer und Kommunikation</item>
+    <item>Wissenschaft im Brennpunkt</item>
+    <item>Wirtschaft und Gesellschaft 162</item>
+    <item>Wirtschaft und Gesellschaft komplett</item>
+    <item>Kultur heute</item>
+  </string-array>
+  <string-array name="sendungValues">
+    <item>searchterm=forschung+aktuell</item>
+    <item>searchterm=computer+und+kommunikation</item>
+    <item>broadcast_id=155</item>
+    <item>broadcast_id=162</item>
+    <item>searchterm=wirtschaft+und+gesellschaft+komplette</item>
+    <item>searchterm=kultur+heute</item>
+  </string-array>
+</resources>

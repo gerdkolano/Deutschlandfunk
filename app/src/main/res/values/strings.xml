@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">Dlf Deutschlandfunk Version 1.1</string>
+  <string name="tage">Tage</string>
+  <string name="serie">Serie</string>
+  <string name="action_settings">Settings</string>
+  <string name="frischeSerienauswahlButtonsAuf">Frische Serienauswahl-Buttons auf </string>
+  <string name="seitennummer">Toggle Player </string>
+  <string name="andereSeite">andere Seite </string>
+  <string name="about">About - über</string>
+  <string name="connection_error">Deutschlandfunk - Verbindung schlecht. Favoriten. Check your network connection.</string>
+  <string name="dialogTextView">dialogTextView</string>
+  <string name="anzeigefragment_TextView">anzeigefragment_TextView</string>
+  <string name="anzeige_TextView">anzeige TextView</string>
+  <string name="dialogEditText">das war der tag</string>
+  <string name="benutzeredit">edit searchterm</string>
+  <string name="benutzerinfo">Info</string>
+  <string name="benutzerfrage">Frag den Benutzer</string>
+  <string name="speichern">Speichern ohne Funktion</string>
+  <string name="löschen">Löschen ohne Funktion</string>
+  <string name="dialog_fire_missiles">FireMissilesDialogFragment.java</string>
+  <string name="fire">Feuer ohne Funktion</string>
+  <string name="cancel">Nicht feuern ohne Funktion</string>
+
+  <string name="lost_connection">DLF meldet: Keine Wi-Fi-Verbindung.</string>
+  <string name="wifi_connected">DLF meldet: Wi-Fi verbunden.</string>
+
+  <string name="entkäfern">Debug Entkäfern</string>
+
+  <string name="a">a</string>
+  <string name="berührt">berührt</string>
+  <string name="berührenTunix">berührt, noch ohne Funktion</string>
+  <string name="spielAb"><![CDATA[>]]></string>
+  <string name="Pause">||</string>
+  <string name="Stop">Stop</string>
+  <string name="vorwärts"><![CDATA[>>]]></string>
+  <string name="zurück"><![CDATA[<<]]></string>
+  <string name="zeigeDauer">Spielzeit</string>
+  <string name="zeigeJetzt">Jetztzeit</string>
+  <string name="zeigeRest">Restzeit</string>
+  <string name="taste1">testTaste1 noch ohne Funktion</string>
+  <string name="lösche">Lösche</string>
+    <string name="hello_world">Hallo Leute</string>
+  <string name="gerätV1">Version 1</string>
+  <string name="gerätV0">Version 0</string>
+  <string name="abspielgerät">Abspielgerät</string>
+
+</resources>

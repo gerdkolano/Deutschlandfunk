@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <ListPreference
+    android:defaultValue="Wi-Fi"
+    android:entries="@array/listArray"
+    android:entryValues="@array/listValues"
+    android:key="listPref"
+    android:summary="Netzwerk-Verbindung connectivity required to download the feed."
+    android:title="Download Feed" />
+  <ListPreference
+    android:defaultValue="forschung+aktuell"
+    android:entries="@array/sendungArray"
+    android:entryValues="@array/sendungValues"
+    android:key="sendungsnamePref"
+    android:summary="Welche Sendung des Deutschlandfunks willst du hören?"
+    android:title="Wähle eine Sendung" />
+  <CheckBoxPreference
+    android:defaultValue="false"
+    android:key="zeitstempelPref"
+    android:summary="Zeige einen Zeitstempel für jeden Verweis."
+    android:title="Zeige die Zeitstempel" />
+  <CheckBoxPreference
+    android:defaultValue="true"
+    android:key="autorPref"
+    android:summary="Zeige die Autoren der Sendungen."
+    android:title="Zeige den Autor" />
+  <CheckBoxPreference
+    android:defaultValue="false"
+    android:key="verweisPref"
+    android:summary="Mach\' die Verweise nicht nur anklickbar, sondern auch sichtbar"
+    android:title="Zeige jeden Verweis."
+    />
+  <EditTextPreference
+    android:defaultValue="1"
+    android:key="seitennummerPref"
+    android:summary="Wähle die Nummer der abzuholende Seite.
+    Nummer 0 bedeutet \'Hole alle Seiten.\'.
+    Je höher die Nummer, desto älter sind die Sendungen"
+    android:title="Seitennummer" />
+  <EditTextPreference
+    android:selectAllOnFocus="true"
+    android:defaultValue="9"
+    android:key="debugPref"
+    android:summary="Wähle das Debug-Niveau. Je höher das Niveau, desto ausführlicher sind die Meldungen"
+    android:title="@string/entkäfern" />
+  <EditTextPreference
+    android:defaultValue=""
+    android:key="nochEineSeriePref"
+    android:summary="Erweitere die Liste der auswählbaren Serien"
+    android:title="Füge eine weitere Serie hinzu" />
+
+</PreferenceScreen>
