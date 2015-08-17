@@ -84,22 +84,23 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
         String.format( "fortschritt=%s", ladeOderSpielFortschritt.toString()));
 */
   }
-/*
-  public MediaPlayer getMediaPlayer() {
-    return mdPlayerV0;
-  }
-*/
+
+  /*
+    public MediaPlayer getMediaPlayer() {
+      return mdPlayerV0;
+    }
+  */
   public String toString() {
     return "Hanno " + super.toString();
   }
 
   public void stoppeWiedergabe() {
-    if (debug>0) Log.i("F090", "Stoppe vielleicht mdPlayerV0");
+    if (debug > 0) Log.i("F090", "Stoppe vielleicht mdPlayerV0");
     if (mdPlayerV0 != null) {
-      if (debug>0) Log.i("F091", "Stoppe mdPlayerV0");
+      if (debug > 0) Log.i("F091", "Stoppe mdPlayerV0");
       if (mdPlayerV0.isPlaying()) {
         mdPlayerV0.stop();
-        if (debug>0) Log.i("F092", "Stoppe alten MediaPlayer");
+        if (debug > 0) Log.i("F092", "Stoppe alten MediaPlayer");
       }
       /*
       mdPlayerV0.release();
@@ -114,7 +115,8 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   protected File doInBackground(String... urls) {
     // Das gelieferte File wird in onPostExecute ans Abspielgerät weitergegeben
     // und dort weiterverarbeitet
-  // File könnte durch ein komplexeres Objekt wie eineSendungErweitert
+    // ToDo : Ersetze File durch eineSendung.
+    // File könnte durch ein komplexeres Objekt wie eineSendungErweitert
     // mit mehr Informationen erstzt weden.
     // gerufen von  downloadDlfunk.execute() in machSendungsButtons
     // urls[i] sind die Parameter von execute(quellurl, zieldateiname, duration)
@@ -136,7 +138,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   protected void onCancelled(File file) {
     super.onCancelled(file);
     if (mdPlayerV0 != null) {
-      if (debug>0) Log.i("F094", "Stoppe mdPlayerV0");
+      if (debug > 0) Log.i("F094", "Stoppe mdPlayerV0");
       if (mdPlayerV0.isPlaying())
         mdPlayerV0.stop();
     }
@@ -146,7 +148,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   protected void onCancelled() {
     super.onCancelled();
     if (mdPlayerV0 != null) {
-      if (debug>0) Log.i("F096", "Stoppe mdPlayerV0");
+      if (debug > 0) Log.i("F096", "Stoppe mdPlayerV0");
       if (mdPlayerV0.isPlaying())
         mdPlayerV0.stop();
     }
@@ -177,27 +179,27 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
         break;
       case SPIELE:
         final MediaPlayer fabspieler = mdPlayerV0;
-      seekBar.setOnTouchListener(new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-          // This is event handler thumb moving event
-          //seekChange(v);
-          if (fabspieler.isPlaying()) {
-            SeekBar seekBar = (SeekBar) v;
-            if (debug>3) Log.i("F080", seekBar.toString());
-            fabspieler.seekTo(seekBar.getProgress());
+        seekBar.setOnTouchListener(new View.OnTouchListener() {
+          @Override
+          public boolean onTouch(View v, MotionEvent event) {
+            // This is event handler thumb moving event
+            //seekChange(v);
+            if (fabspieler.isPlaying()) {
+              SeekBar seekBar = (SeekBar) v;
+              if (debug > 3) Log.i("F080", seekBar.toString());
+              fabspieler.seekTo(seekBar.getProgress());
+            }
+            if (debug > 3) Log.i("F070", event.toString());
+            return false;
           }
-          if (debug>3) Log.i("F070", event.toString());
-          return false;
-        }
-      });
+        });
         int msek = publishedProgress[1];
         int max = publishedProgress[2];
         int jetzt = mdPlayerV0.getCurrentPosition();
-        if (debug>99) Log.i("F 02",
-            String.format( "fortschritt=%s", ladeOderSpielFortschritt.toString()));
-        if (debug>3) Log.i("F 03",
-            String.format( "CurPos=%d Update  =%d Max=%d", jetzt, msek, seekBar.getMax()));
+        if (debug > 99) Log.i("F 02",
+            String.format("fortschritt=%s", ladeOderSpielFortschritt.toString()));
+        if (debug > 3) Log.i("F 03",
+            String.format("CurPos=%d Update  =%d Max=%d", jetzt, msek, seekBar.getMax()));
         double prozentsatz = 100.0 * jetzt / max;
         seekBar.setMax(max); // max wird in "onPrepared(" gesetzt.
         seekBar.setProgress(jetzt);
@@ -208,12 +210,12 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
             hms(max - msek),
             hms(max),
             zieldateiname
-            );
+        );
         break;
       default:
         break;
     }
-    if (debug>99) Log.i("F 04", meldung);
+    if (debug > 99) Log.i("F 04", meldung);
     ladeOderSpielFortschritt.setText(meldung);
   }
 
@@ -227,13 +229,14 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
     boolean isPaused = !fabspieler.isPlaying();
     seekBar = (SeekBar) this.activity.findViewById(R.id.SeekBar01);
     ladeOderSpielFortschritt = (TextView) this.activity.findViewById(R.id.zeigeJetzt);
-    if (debug>3) Log.i("F030", seekBar.toString());
+    if (debug > 3) Log.i("F030", seekBar.toString());
     if (fabspieler != null) {
       final int dauer = fabspieler.getDuration();
 //      final int divisor = fabspieler.getDuration() / 100;
 
       seekBar.setMax(dauer);
-      if (debug>0) Log.i("F040", "Dauer = " + dauer + "ms Current = " + fabspieler.getCurrentPosition() + "ms");
+      if (debug > 0)
+        Log.i("F040", "Dauer = " + dauer + "ms Current = " + fabspieler.getCurrentPosition() + "ms");
       //final Handler handler = new Handler();
 
       //final boolean variante1 = true;
@@ -244,7 +247,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
           @Override
           public void run() {
             int jetzt = fabspieler.getCurrentPosition();
-            if (debug>99) Log.i("F 50", " CurPos=" + jetzt
+            if (debug > 99) Log.i("F 50", " CurPos=" + jetzt
                 + " Progress=" + seekBar.getProgress()
                 + " Max=" + seekBar.getMax());
             if (variante1) {
@@ -257,7 +260,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
           }
         };
         handler.post(wiederkehrend);
-        if (debug>3) Log.i("F060", "Progress-Takt " + (deltaMillisekunden / 1000) + " Sekunden");
+        if (debug > 3) Log.i("F060", "Progress-Takt " + (deltaMillisekunden / 1000) + " Sekunden");
       }
 
       seekBar.setOnTouchListener(new View.OnTouchListener() {
@@ -267,10 +270,10 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
           //seekChange(v);
           if (fabspieler.isPlaying()) {
             SeekBar seekBar = (SeekBar) v;
-            if (debug>3) Log.i("F080", seekBar.toString());
+            if (debug > 3) Log.i("F080", seekBar.toString());
             fabspieler.seekTo(seekBar.getProgress());
           }
-          if (debug>3) Log.i("F070", event.toString());
+          if (debug > 3) Log.i("F070", event.toString());
           return false;
         }
       });
@@ -282,45 +285,47 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
     if (result == null) return;
     String Abspielgerätename =
         PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(activity.getString(R.string.abspielgerät),
+            .getString(activity.getString(R.string.abspielgerät),
                 activity.getString(R.string.gerätV0));
     if (Abspielgerätename.equals(activity.getString(R.string.gerätV1))) {
-          Toast.makeText(context, "A010 " + Abspielgerätename + result.toString(), Toast.LENGTH_LONG).show();
+      Toast.makeText(context, "A010 " + Abspielgerätename + result.toString(), Toast.LENGTH_LONG).show();
       SpieleMp3Ab lass = new SpieleMp3Ab(activity, context, debug);
-      if (debug>0) Log.i("A020", "rufe lass.hören(\"" + result.toString() + "\")");
+      if (debug > 0) Log.i("A020", "rufe lass.hören(\"" + result.toString() + "\")");
       lass.hören(result);
-      // Dieses result-File könnte durch ein komplexeres Objekt wie eineSendungErweitert ersetzt werden
+      // ToDo : Ersetze result-File durch eineSendung.
+      // Dieses result-File könnte durch ein komplexeres Objekt
+      // wie eineSendungErweitert ersetzt werden
       return;
-  }
+    }
     Toast.makeText(context, "f214 Versuche abzuspielen: " + result.toString(),
         Toast.LENGTH_SHORT).show();
     Uri myUri = Uri.fromFile(result);
     if (mdPlayerV0 == null) {
       mdPlayerV0 = new MediaPlayer(); // idle state
-      if (debug>0) Log.i("f215", "Nimm neuen MediaPlayer");
+      if (debug > 0) Log.i("f215", "Nimm neuen MediaPlayer");
     } else {
-      if (debug>0) Log.i("f216", "Nimm alten MediaPlayer");
+      if (debug > 0) Log.i("f216", "Nimm alten MediaPlayer");
       boolean spielt = false;
       try {
         spielt = mdPlayerV0.isPlaying();
-        if (debug>2) Log.i("f217", "Spielt alter MediaPlayer?");
+        if (debug > 2) Log.i("f217", "Spielt alter MediaPlayer?");
       } catch (Exception e) {
-        if (debug>2) Log.i("f218", e.toString());
+        if (debug > 2) Log.i("f218", e.toString());
       }
-      if (debug>0) Log.i("f219", spielt ? "spielt" : "spielt nicht");
+      if (debug > 0) Log.i("f219", spielt ? "spielt" : "spielt nicht");
       try {
         if (spielt) {
           mdPlayerV0.stop();
-          if (debug>0) Log.i("f220", "Stoppe alten MediaPlayer");
+          if (debug > 0) Log.i("f220", "Stoppe alten MediaPlayer");
         }
       } catch (Exception e) {
-        if (debug>0) Log.i("f221", e.toString());
+        if (debug > 0) Log.i("f221", e.toString());
       }
       try {
         mdPlayerV0.reset();
-        if (debug>0) Log.i("f222", "Reset alten MediaPlayer");
+        if (debug > 0) Log.i("f222", "Reset alten MediaPlayer");
       } catch (Exception e) {
-        if (debug>0) Log.i("f223", e.toString());
+        if (debug > 0) Log.i("f223", e.toString());
       }
       /*
       mdPlayerV0.release();
@@ -328,12 +333,12 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       if (handler != null) handler.removeCallbacks(wiederkehrend);
       mdPlayerV0 = new MediaPlayer(); // idle state
       */
-      if (debug>0) Log.i("f224", "MediaPlayer idle");
+      if (debug > 0) Log.i("f224", "MediaPlayer idle");
     }
     try {
       mdPlayerV0.setAudioStreamType(AudioManager.STREAM_MUSIC);
     } catch (Exception e) {
-      if (debug>0) Log.i("f226", e.toString());
+      if (debug > 0) Log.i("f226", e.toString());
     }
     /* keine Wirkung
     mdPlayerV0.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
@@ -348,21 +353,21 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
     if (asynchron) {
       mdPlayerV0.setOnPreparedListener(this);
       mdPlayerV0.prepareAsync(); // prepare async to not block main thread
-      if (debug>0) Log.i("f229", "asynchron abspielen " + myUri.toString());
+      if (debug > 0) Log.i("f229", "asynchron abspielen " + myUri.toString());
     } else {
       try {
         mdPlayerV0.prepare(); // prepared state, we can call start()
       } catch (IOException e) {
         e.printStackTrace();
       }
-      if (debug>0) Log.i("f230", "synchron " + myUri.toString());
+      if (debug > 0) Log.i("f230", "synchron " + myUri.toString());
       mdPlayerV0.start();
     }
   }
 
   private void copyStream(InputStream is, OutputStream os, String duration) {
     // gerufen von holeImBackground()
-    final int buffer_size = 16*1024;
+    final int buffer_size = 16 * 1024;
     int bytesSchon = 0;
     int bytesneu = 0;
     int iduration = 1;
@@ -373,17 +378,17 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
     }
     //iduration *= (16*1024);
     // (bytesSchon+=bytesneu)/(16*1024) * 100 / iduration
-    int divisor = (16*1024) * iduration / 100;
+    int divisor = (16 * 1024) * iduration / 100;
     byte[] bytes = new byte[buffer_size];
     try {
       while ((bytesneu = is.read(bytes, 0, buffer_size)) > -1) {
-        publishProgress(LADE, (bytesSchon+=bytesneu)/divisor, bytesSchon/(16*1024), iduration); // für onProgressUpdate
+        publishProgress(LADE, (bytesSchon += bytesneu) / divisor, bytesSchon / (16 * 1024), iduration); // für onProgressUpdate
         os.write(bytes, 0, bytesneu);
       }
     } catch (Exception ex) {
-      if (debug>0) Log.i("F099", "copyStream" + ex.toString());
+      if (debug > 0) Log.i("F099", "copyStream" + ex.toString());
     }
-    if (debug>0) Log.i("F100", "bytesneu = " + bytesneu);
+    if (debug > 0) Log.i("F100", "bytesneu = " + bytesneu);
   }
 
   private File getAlbumStorageDir(String albumName) {
@@ -391,22 +396,22 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
     File file = new File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_MUSIC), albumName);
     if (!file.exists()) {
-      if (debug>0) Log.i("F110", "Stelle Directory " + albumName + " her");
+      if (debug > 0) Log.i("F110", "Stelle Directory " + albumName + " her");
     }
-    if (debug>0) Log.i("F120", "Finde Directory " + albumName + " vor");
+    if (debug > 0) Log.i("F120", "Finde Directory " + albumName + " vor");
     return file;
   }
 
   // Given a string representation of a URL, sets up a connection and
   // copies an input stream to a file.
   private File holeImBackground(String zielVerzeichnis,
-                    String quellUrl, String zielDatei, String duration) {
+                                String quellUrl, String zielDatei, String duration) {
     // gerufen von doInBackground
     File ausgabedatei = null;
     try {
       String storageState = Environment.getExternalStorageState();
       if (!storageState.equals(Environment.MEDIA_MOUNTED)) {
-        if (debug>0) Log.i("F130", "holeImBackground " + quellUrl);
+        if (debug > 0) Log.i("F130", "holeImBackground " + quellUrl);
         return ausgabedatei;
         //return "Leider nicht Environment.MEDIA_MOUNTED";
       }
@@ -416,7 +421,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       ausgabedatei = new File(ausgabeverzeichnis, zielDatei);
       String zielPfad = ausgabedatei.toString();
       if (ausgabedatei.exists()) {
-        if (debug>0) Log.i("F140", "Datei " + zielPfad + " existiert bereits");
+        if (debug > 0) Log.i("F140", "Datei " + zielPfad + " existiert bereits");
         return ausgabedatei;
         //return "Datei " + zielPfad + " existiert bereits";
       }
@@ -438,7 +443,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       os = new FileOutputStream(ausgabedatei);
 
       // 2014-07-28
-      if (debug>0) Log.i("F145", "Ladefortschritt. duration=" + duration);
+      if (debug > 0) Log.i("F145", "Ladefortschritt. duration=" + duration);
       // ladeOderSpielFortschritt.setText(String.format("F145 Ladefortschritt"));
       // Only the original thread that created a view hierarchy can touch its views.
 
@@ -449,7 +454,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
 
       copyStream(is, os, duration);
       os.close();
-      if (debug>0) Log.i("F150", "Datei " + zielPfad + " erzeugt");
+      if (debug > 0) Log.i("F150", "Datei " + zielPfad + " erzeugt");
       return ausgabedatei;
       //return "Datei " + zielPfad + " erzeugt";
     } catch (IOException e) {
