@@ -6,10 +6,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -59,7 +56,7 @@ class DownloadXmlTask extends AsyncTask<String, String, Menge> {
   int debug;
   DownloadDlfunk downloadDlfunk;
   private Menge allentries;
-  private MediaPlayer mediaPlayer;
+  private MediaPlayer mxPlayerV0;
   private TextView ladeFortschrittAlsText;
   private boolean bevorzugeNetz;
 /*
@@ -71,15 +68,16 @@ class DownloadXmlTask extends AsyncTask<String, String, Menge> {
   * gerufen als .execute() von Serien
   */
   DownloadXmlTask(Activity activity, Context context, int debug,
-                  DownloadDlfunk downloadDlfunk, MediaPlayer mediaPlayer,
+                  DownloadDlfunk downloadDlfunk, MediaPlayer mxPlayerV0,
                   boolean bevorzugeNetz) {
     this.activity = activity;
-    this.context = context;
+    //this.context = context;
+    this.context = activity.getApplicationContext();
     this.debug = debug;
     this.downloadDlfunk = downloadDlfunk;
-    this.mediaPlayer = mediaPlayer;
+    this.mxPlayerV0 = mxPlayerV0;
     this.bevorzugeNetz = bevorzugeNetz;
-    //activity.setContentView(R.layout.activity_wahl); // Entfernt frühere Eintragungen
+    //activity.setContentView(R.layout.activity_auswahl); // Entfernt frühere Eintragungen
     ladeFortschrittAlsText = (TextView) this.activity.findViewById(R.id.zeigeJetzt);
     ladeFortschrittAlsText.setText(String.format("Ladefortschritt in DownloadXmlTask"));
   }
@@ -101,11 +99,11 @@ class DownloadXmlTask extends AsyncTask<String, String, Menge> {
   @Override
   protected Menge doInBackground(String... urls) { // DownloadXmlTask
     // ruft ladeXmlBeschreibungen
-    // wird gerufen in MachSerienauswahlButtons
+    // wird gerufen in stelle
     // als
     // new DownloadXmlTask(
     //      activity, context, this.debug,
-    //      prefSeite, downloadDlfunk, mediaPlayer
+    //      prefSeite, downloadDlfunk, mxPlayerV0
     //  ).execute(suchbegriff);
     // urls[0] ist der Parameter von execute im Auruf
     // downloadXmlTask( ... ).execute(suchbegriff)
@@ -117,12 +115,12 @@ class DownloadXmlTask extends AsyncTask<String, String, Menge> {
     // + "&drau:page=" + prefSeite;
     String seitennummerparameter = "&drau:page=";
     // Der Konstruktor ruft ladeAusSendungsdatei nicht
-    Menge menge = new Menge(activity, context, debug, mediaPlayer);
+    Menge menge = new Menge(activity, context, debug, mxPlayerV0);
     menge.setSuchbegriff(suchbegriff);
     if (!bevorzugeNetz) {
       // Lade entries aus aus der Datei zum suchbegriff
       // Der Konstruktor ruft ladeAusSendungsdatei
-      menge = new Menge(activity, context, debug, mediaPlayer, suchbegriff);
+      menge = new Menge(activity, context, debug, mxPlayerV0, suchbegriff);
       if (debug > 8) menge.logge();
       if (debug > 0)
         Log.i("X070", "ladeAusSendungsdatei fand " + menge.size() + " Adressen mit dem Suchbegriff \"" + suchbegriff + "\" in " + menge.seitenanzahl + " Seiten");
@@ -174,7 +172,7 @@ class DownloadXmlTask extends AsyncTask<String, String, Menge> {
 
   @Override
   protected void onPreExecute() { // DownloadXmlTask
-    //activity.setContentView(R.layout.activity_wahl); // Entfernt frühere Eintragungen
+    //activity.setContentView(R.layout.activity_auswahl); // Entfernt frühere Eintragungen
     //myTextView = (TextView) activity.findViewById(R.id.textView1);
   }
 
@@ -219,9 +217,13 @@ Misserfolg  : Umbenennung zurücknehmen.
 
 */
 
-    //downloadDlfunk = new MachSendungsButtons(activity, context, debug, mediaPlayer)
+    //downloadDlfunk = new MachSendungsButtons(activity, context, debug, mxPlayerV0)
     //    .machSendungsbuttons(alleSendungen);
-    downloadDlfunk = alleSendungen.machSendungsbuttons();
+    if (alleSendungen != null) {
+      downloadDlfunk = alleSendungen.machSendungsbuttons();
+    } else {
+      downloadDlfunk = null;
+    }
     if (downloadDlfunk == null) {
       if (debug > 3) Log.i("X091", "PostExec " + "downloadDlfunk==null");
     } else {
@@ -242,18 +244,19 @@ Misserfolg  : Umbenennung zurücknehmen.
       String seitennummerparameter)
       throws XmlPullParserException, IOException {
 
-    String nummertext = PreferenceManager.getDefaultSharedPreferences(context).getString("seitennummerPref", "0");
-    int gewünschteSeite = 0;
-    if (debug > 99) Log.i("X050", ((gewünschteSeite == 0) ? "alle" : "eine") + " " + 0 + " Seiten");
+    String nummertext = PreferenceManager.getDefaultSharedPreferences(context)
+        .getString("seitennummerPref", "1");
+    int gewünschteSeite = 1;
     if (debug > 2) Log.i("X050", "ladeXmlBeschreibungen " + urlString);
     try {
       gewünschteSeite = Integer.parseInt(nummertext);
-      if (debug > 8) Log.i("X052", "gewünschte Seite = " + nummertext);
+      if (debug > 2) Log.i("X052", "gewünschte Seite = " + nummertext);
     } catch (NumberFormatException e) {
       //Will Throw exception!
       //do something! anything to handle the exception.
-      if (debug > 8) Log.i("X054", nummertext + "!" + e.toString());
+      if (debug > 2) Log.i("X054", nummertext + "!" + e.toString());
     }
+    if (debug > 2) Log.i("X050", ((gewünschteSeite == 0) ? "alle" : "eine") + " " + 0 + " Seiten");
 
     DeutschlandradioXmlParser dlfunkXmlParser = new DeutschlandradioXmlParser(debug);
     Menge entries = null; // Liste aufgezeichneter Sendungen

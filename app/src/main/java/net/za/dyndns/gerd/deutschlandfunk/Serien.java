@@ -14,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.TreeSet;
 
@@ -29,13 +28,16 @@ public class Serien {
   private Context context;
   private int debug;
   private DownloadDlfunk downloadDlfunk;
-  private MediaPlayer mediaPlayer;
+  private MediaPlayer mePlayerV0;
 
-  public Serien(Activity activity, Context context, int debug, MediaPlayer mediaPlayer) {
+  public Serien(Activity activity, Context context, int debug, MediaPlayer mePlayerV0) {
     this.activity = activity;
+    this.context = activity.getApplicationContext(); // context;
+    if (debug > 2) Log.i("SE02", "this.context=" + this.context.toString());
     this.context = context;
+    if (debug > 2) Log.i("SE04", "this.context=" + this.context.toString());
     this.debug = debug;
-    this.mediaPlayer = mediaPlayer;
+    this.mePlayerV0 = mePlayerV0;
     this.filename = "serien.txt";
     serie = new TreeSet<Serie>();
     this.geordneteMenge = new TreeSet<Serie>();
@@ -60,7 +62,7 @@ public class Serien {
       this.serie.add(new Serie("Wirtschaft und Gesellschaft komplett", "searchterm=wirtschaft+und+gesellschaft+komplette"));
       this.serie.add(new Serie("Kultur heute", "searchterm=Kultur+Heute"));
       retteInDieSeriendatei();
-      if (debug > 2) Log.i("SE10", "Lies \"serien\" aus dem Programmtext");
+      if (debug > 2) Log.i("SE10", "Lies \"serien\" aus dem Programmtext Serien.java");
     }
     return this;
   }
@@ -95,7 +97,7 @@ public class Serien {
       Serie neueSerie = new Serie();
       while ((strLine = br.readLine()) != null) {
         // Print the content on the logcat
-        if (debug > 8) Log.i("SE60", String.format("%2d %s", zeile, strLine));
+        if (debug > 8) Log.i("SE60", String.format("%2d %s", zeile/2, strLine));
         // Sammle die einzelnen Felder
         if (neueSerie.allesGesammelt(strLine, zeile)) {
           this.serie.add(neueSerie);
@@ -157,10 +159,10 @@ public class Serien {
 
   public void stelleSerienauswahlbuttonsHer() { // AuswahlActivity
     String KEINE = "keine Vorwahl";
-    Serien serien = new Serien(activity, context, debug, mediaPlayer);
+    Serien serien = new Serien(activity, context, debug, mePlayerV0);
     if (debug > 3)
       Log.i("SR20", " Erstelle " + serien.size() + " Serienauswahlbuttons.");
-    /* netz0Serie ist in activity_wahl.xml definiert*/
+    /* netz0Serie ist in activity_auswahlahl.xml definiert*/
     LinearLayout netz0layout = (LinearLayout) activity.findViewById(R.id.netz0Serie);
     LinearLayout netz1layout = (LinearLayout) activity.findViewById(R.id.netz1Serie);
     int nummer = 0;
@@ -250,7 +252,7 @@ public class Serien {
       //DownloadXmlTask downloadXmlTask = (DownloadXmlTask)
       new DownloadXmlTask(
           activity, context, this.debug,
-          downloadDlfunk, mediaPlayer, bevorzugeNetz
+          downloadDlfunk, mePlayerV0, bevorzugeNetz
       ).execute(suchbegriff); // dort ruft doInBackground ladeXmlBeschreibungen("http...?drau:suchbegriff")
       Helfer h = new Helfer(context, debug);
       h.logi(2, "SR70", "InBack downloadXmlTask.execute(" + suchbegriff + "," + seitennummer + ")");
@@ -262,12 +264,11 @@ public class Serien {
 
   // Displays an error if the app is unable to load content.
   private void showErrorPage() {
-    activity.setContentView(R.layout.activity_wahl);
+    activity.setContentView(R.layout.activity_auswahl);
 
     // The specified network connection is not available. Displays error message.
     //TextView myTextView = (TextView) this.findViewById(R.id.textView1);
     //myTextView.setText(this.getResources().getString(R.string.connection_error));
   }
-
 
 }

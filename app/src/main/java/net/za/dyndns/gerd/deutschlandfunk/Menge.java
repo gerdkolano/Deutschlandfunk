@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,7 +31,7 @@ public class Menge {
   private Context context;
   private int debug;
   private DownloadDlfunk downloadDlfunk;
-  private MediaPlayer mediaPlayer;
+  private MediaPlayer mmPlayerV0;
   public int seitenanzahl;
 
   public Menge() {
@@ -40,11 +39,11 @@ public class Menge {
     this.seitenanzahl = 1;
   }
 
-  public Menge(Activity activity, Context context, int debug, MediaPlayer mediaPlayer) {
+  public Menge(Activity activity, Context context, int debug, MediaPlayer mmPlayerV0) {
     this.activity = activity;
     this.context = context;
     this.debug = debug;
-    this.mediaPlayer = mediaPlayer;
+    this.mmPlayerV0 = mmPlayerV0;
     this.geordneteMenge = new TreeSet<EineSendung>();
     this.seitenanzahl = 1;
   }
@@ -61,16 +60,16 @@ public class Menge {
     return this.filename;
   }
 
-  public Menge(Activity activity, Context context, int debug, MediaPlayer mediaPlayer, String suchbegriff) {
+  public Menge(Activity activity, Context context, int debug, MediaPlayer mmPlayerV0, String suchbegriff) {
 /*
     this.activity = activity;
     this.context = context;
     this.debug = debug;
-    this.mediaPlayer = mediaPlayer;
+    this.mmPlayerV0 = mmPlayerV0;
     this.geordneteMenge = new TreeSet<EineSendung>();
     this.seitenanzahl = 1;
 */
-    this(activity, context, debug, mediaPlayer);
+    this(activity, context, debug, mmPlayerV0);
     this.filename = sendungsDateiname(suchbegriff);
     ladeAusSendungsdatei();
   }
@@ -189,7 +188,7 @@ public class Menge {
       //Read File Line By Line
       while ((strLine = br.readLine()) != null) {
         // Print the content on the console
-        if (debug > 8) Log.i("Z010", String.format("%3d %s", nummer, strLine));
+        if (debug > 8) Log.i("Z010", String.format("%3d %d %s", nummer/EineSendung.siebenZeilen, nummer %EineSendung.siebenZeilen, strLine));
         nummer++;
         //System.out.println(strLine);
       }
@@ -306,11 +305,16 @@ public class Menge {
       final String duration = eineSendung.duration;
       final String zieldateiname = eineSendung.machDateiname();
       if (debug > 1)
-        Taste.setText("E012 " + eineSendung.buttontext(true, true));
+        Taste.setText("E012 " + eineSendung.buttontext(true, true, true));
       else
         Taste.setText(eineSendung.buttontext(
-            PreferenceManager.getDefaultSharedPreferences(context).getBoolean("autorPref", false),
-            PreferenceManager.getDefaultSharedPreferences(context).getBoolean("zeitstempelPref", false)));
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(activity.getString(R.string.autorPref), false),
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(activity.getString(R.string.zeitstempelPref), false),
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(activity.getString(R.string.durationPref), false)
+        ));
       Taste.setId(16081947 + nummer);
       if (debug > 8) Log.i("E020", quellurl + " -> " + zieldateiname);
       Taste.setOnClickListener(
@@ -325,13 +329,13 @@ public class Menge {
                 }
                 downloadDlfunk = (DownloadDlfunk)
                     new DownloadDlfunk(
-                        activity, context, debug, mediaPlayer)
+                        activity, context, debug, mmPlayerV0)
                         .execute(quellurl, zieldateiname, duration);
 //                      .execute(new String[]{quellurl, zieldateiname, duration});
               } catch (Exception e) {
                 e.printStackTrace();
               } finally {
-                if (debug > 8) Log.i("E040", downloadDlfunk.toString());
+                if (debug > 8) Log.i("E040", downloadDlfunk != null ? downloadDlfunk.toString() : "null");
               }
               if (debug > 8) Log.i("E050", "Lade " + zieldateiname + " herunter");
               Toast.makeText(context, "Schild-003 Lade " + zieldateiname + " herunter", Toast.LENGTH_SHORT).show();

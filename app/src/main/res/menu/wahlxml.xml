@@ -20,7 +20,7 @@
   <item
     android:id="@+id/abspielgerät"
     android:alphabeticShortcut="n"
-    android:title="@string/seitennummer"/>
+    android:title="@string/geräteversion"/>
   <item
     android:id="@+id/andereSeite"
     android:title="@string/andereSeite"/>

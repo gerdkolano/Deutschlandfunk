@@ -6,15 +6,15 @@
   <string name="serie">Serie</string>
   <string name="action_settings">Settings</string>
   <string name="frischeSerienauswahlButtonsAuf">Frische Serienauswahl-Buttons auf </string>
-  <string name="seitennummer">Toggle Player </string>
+  <string name="geräteversion">Toggle Player </string>
   <string name="andereSeite">andere Seite </string>
   <string name="about">About - über</string>
   <string name="connection_error">Deutschlandfunk - Verbindung schlecht. Favoriten. Check your network connection.</string>
   <string name="dialogTextView">dialogTextView</string>
-  <string name="anzeigefragment_TextView">anzeigefragment_TextView</string>
-  <string name="anzeige_TextView">anzeige TextView</string>
+  <string name="anzeigefragment_TextView">Anzeigefragment_TextView</string>
+  <string name="anzeige_TextView">Anzeige TextView</string>
   <string name="dialogEditText">das war der tag</string>
-  <string name="benutzeredit">edit searchterm</string>
+  <string name="benutzeredit">Editiere Searchterm</string>
   <string name="benutzerinfo">Info</string>
   <string name="benutzerfrage">Frag den Benutzer</string>
   <string name="speichern">Speichern ohne Funktion</string>
@@ -28,7 +28,6 @@
 
   <string name="entkäfern">Debug Entkäfern</string>
 
-  <string name="a">a</string>
   <string name="berührt">berührt</string>
   <string name="berührenTunix">berührt, noch ohne Funktion</string>
   <string name="spielAb"><![CDATA[>]]></string>
@@ -36,14 +35,22 @@
   <string name="Stop">Stop</string>
   <string name="vorwärts"><![CDATA[>>]]></string>
   <string name="zurück"><![CDATA[<<]]></string>
-  <string name="zeigeDauer">Spielzeit</string>
-  <string name="zeigeJetzt">Jetztzeit</string>
-  <string name="zeigeRest">Restzeit</string>
+  <string name="zeigeDauer">Anzeige der Gesamtpielzeit</string>
+  <string name="zeigeJetzt">Anzeige der Jetztzeit</string>
+  <string name="zeigeRest">Anzeige der Restzeit</string>
   <string name="taste1">testTaste1 noch ohne Funktion</string>
-  <string name="lösche">Lösche</string>
-    <string name="hello_world">Hallo Leute</string>
+  <string name="lösche">Lösche MP3</string>
   <string name="gerätV1">Version 1</string>
   <string name="gerätV0">Version 0</string>
   <string name="abspielgerät">Abspielgerät</string>
+  <string name="debugPref">debugPref</string>
+  <string name="seitennummer">Seitennummer</string>
+  <string name="durationPref">durationPref</string>
+  <string name="autorPref">autorPref</string>
+  <string name="zeitstempelPref">zeitstempelPref</string>
+  <string name="jumpedBack">You have Jumped backward %d seconds</string>
+  <string name="jumpedForward">You have Jumped forward %d seconds</string>
+  <string name="cannotJumpForward">Cannot jump forward %d seconds</string>
+  <string name="cannotJumpBack">Cannot jump backward %d seconds</string>
 
 </resources>

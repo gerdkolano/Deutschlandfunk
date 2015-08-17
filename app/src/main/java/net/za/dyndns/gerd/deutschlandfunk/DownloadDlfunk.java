@@ -56,7 +56,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   private Activity activity;
   private Context context;
   private int debug;
-  private MediaPlayer mediaPlayer;
+  private MediaPlayer mdPlayerV0;
   private SeekBar seekBar;
   private TextView ladeOderSpielFortschritt;
   private final Handler handler;
@@ -67,14 +67,14 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
 
   // Konstruktor wird verwendet in MachSendungsButtons
   // als new DownloadDlfunk(
-  //                      activity, context, debug, mediaPlayer)
+  //                      activity, context, debug, mdPlayerV0)
   //                      .execute(quellurl, zieldateiname, duration);
 
-  DownloadDlfunk(Activity activity, Context context, int debug, MediaPlayer mediaPlayer) {
+  DownloadDlfunk(Activity activity, Context context, int debug, MediaPlayer mdPlayerV0) {
     this.activity = activity;
     this.context = context;
     this.debug = debug;
-    this.mediaPlayer = mediaPlayer;
+    this.mdPlayerV0 = mdPlayerV0;
     handler = new Handler();
     wiederkehrend = null;
     zieldateiname = "";
@@ -86,7 +86,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   }
 /*
   public MediaPlayer getMediaPlayer() {
-    return mediaPlayer;
+    return mdPlayerV0;
   }
 */
   public String toString() {
@@ -94,16 +94,16 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   }
 
   public void stoppeWiedergabe() {
-    if (debug>0) Log.i("F090", "Stoppe vielleicht mediaPlayer");
-    if (mediaPlayer != null) {
-      if (debug>0) Log.i("F091", "Stoppe mediaPlayer");
-      if (mediaPlayer.isPlaying()) {
-        mediaPlayer.stop();
+    if (debug>0) Log.i("F090", "Stoppe vielleicht mdPlayerV0");
+    if (mdPlayerV0 != null) {
+      if (debug>0) Log.i("F091", "Stoppe mdPlayerV0");
+      if (mdPlayerV0.isPlaying()) {
+        mdPlayerV0.stop();
         if (debug>0) Log.i("F092", "Stoppe alten MediaPlayer");
       }
       /*
-      mediaPlayer.release();
-      mediaPlayer = null;
+      mdPlayerV0.release();
+      mdPlayerV0 = null;
       if (handler != null) handler.removeCallbacks(wiederkehrend);
       */
     }
@@ -112,6 +112,10 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   // Zielverzeichnis sdcard/Music/deutschlandfunk
   @Override
   protected File doInBackground(String... urls) {
+    // Das gelieferte File wird in onPostExecute ans Abspielgerät weitergegeben
+    // und dort weiterverarbeitet
+  // File könnte durch ein komplexeres Objekt wie eineSendungErweitert
+    // mit mehr Informationen erstzt weden.
     // gerufen von  downloadDlfunk.execute() in machSendungsButtons
     // urls[i] sind die Parameter von execute(quellurl, zieldateiname, duration)
     String quellurl = urls[0];
@@ -131,20 +135,20 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
   @Override
   protected void onCancelled(File file) {
     super.onCancelled(file);
-    if (mediaPlayer != null) {
-      if (debug>0) Log.i("F094", "Stoppe mediaPlayer");
-      if (mediaPlayer.isPlaying())
-        mediaPlayer.stop();
+    if (mdPlayerV0 != null) {
+      if (debug>0) Log.i("F094", "Stoppe mdPlayerV0");
+      if (mdPlayerV0.isPlaying())
+        mdPlayerV0.stop();
     }
   }
 
   @Override
   protected void onCancelled() {
     super.onCancelled();
-    if (mediaPlayer != null) {
-      if (debug>0) Log.i("F096", "Stoppe mediaPlayer");
-      if (mediaPlayer.isPlaying())
-        mediaPlayer.stop();
+    if (mdPlayerV0 != null) {
+      if (debug>0) Log.i("F096", "Stoppe mdPlayerV0");
+      if (mdPlayerV0.isPlaying())
+        mdPlayerV0.stop();
     }
   }
 
@@ -172,7 +176,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
             publishedProgress[1], publishedProgress[2], publishedProgress[3]);
         break;
       case SPIELE:
-        final MediaPlayer fabspieler = mediaPlayer;
+        final MediaPlayer fabspieler = mdPlayerV0;
       seekBar.setOnTouchListener(new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -189,7 +193,7 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       });
         int msek = publishedProgress[1];
         int max = publishedProgress[2];
-        int jetzt = mediaPlayer.getCurrentPosition();
+        int jetzt = mdPlayerV0.getCurrentPosition();
         if (debug>99) Log.i("F 02",
             String.format( "fortschritt=%s", ladeOderSpielFortschritt.toString()));
         if (debug>3) Log.i("F 03",
@@ -285,19 +289,20 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       SpieleMp3Ab lass = new SpieleMp3Ab(activity, context, debug);
       if (debug>0) Log.i("A020", "rufe lass.hören(\"" + result.toString() + "\")");
       lass.hören(result);
+      // Dieses result-File könnte durch ein komplexeres Objekt wie eineSendungErweitert ersetzt werden
       return;
   }
     Toast.makeText(context, "f214 Versuche abzuspielen: " + result.toString(),
         Toast.LENGTH_SHORT).show();
     Uri myUri = Uri.fromFile(result);
-    if (mediaPlayer == null) {
-      mediaPlayer = new MediaPlayer(); // idle state
+    if (mdPlayerV0 == null) {
+      mdPlayerV0 = new MediaPlayer(); // idle state
       if (debug>0) Log.i("f215", "Nimm neuen MediaPlayer");
     } else {
       if (debug>0) Log.i("f216", "Nimm alten MediaPlayer");
       boolean spielt = false;
       try {
-        spielt = mediaPlayer.isPlaying();
+        spielt = mdPlayerV0.isPlaying();
         if (debug>2) Log.i("f217", "Spielt alter MediaPlayer?");
       } catch (Exception e) {
         if (debug>2) Log.i("f218", e.toString());
@@ -305,53 +310,53 @@ public class DownloadDlfunk extends AsyncTask<String, Integer, File>
       if (debug>0) Log.i("f219", spielt ? "spielt" : "spielt nicht");
       try {
         if (spielt) {
-          mediaPlayer.stop();
+          mdPlayerV0.stop();
           if (debug>0) Log.i("f220", "Stoppe alten MediaPlayer");
         }
       } catch (Exception e) {
         if (debug>0) Log.i("f221", e.toString());
       }
       try {
-        mediaPlayer.reset();
+        mdPlayerV0.reset();
         if (debug>0) Log.i("f222", "Reset alten MediaPlayer");
       } catch (Exception e) {
         if (debug>0) Log.i("f223", e.toString());
       }
       /*
-      mediaPlayer.release();
-      mediaPlayer = null;
+      mdPlayerV0.release();
+      mdPlayerV0 = null;
       if (handler != null) handler.removeCallbacks(wiederkehrend);
-      mediaPlayer = new MediaPlayer(); // idle state
+      mdPlayerV0 = new MediaPlayer(); // idle state
       */
       if (debug>0) Log.i("f224", "MediaPlayer idle");
     }
     try {
-      mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+      mdPlayerV0.setAudioStreamType(AudioManager.STREAM_MUSIC);
     } catch (Exception e) {
       if (debug>0) Log.i("f226", e.toString());
     }
     /* keine Wirkung
-    mediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
-    mediaPlayer.setScreenOnWhilePlaying(true);
+    mdPlayerV0.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+    mdPlayerV0.setScreenOnWhilePlaying(true);
     */
     try {
-      mediaPlayer.setDataSource(context, myUri); // initialized state
+      mdPlayerV0.setDataSource(context, myUri); // initialized state
     } catch (Exception e) {
       Log.i("f228", e.toString());
     }
     boolean asynchron = true; // false schaltet progress bar ab
     if (asynchron) {
-      mediaPlayer.setOnPreparedListener(this);
-      mediaPlayer.prepareAsync(); // prepare async to not block main thread
+      mdPlayerV0.setOnPreparedListener(this);
+      mdPlayerV0.prepareAsync(); // prepare async to not block main thread
       if (debug>0) Log.i("f229", "asynchron abspielen " + myUri.toString());
     } else {
       try {
-        mediaPlayer.prepare(); // prepared state, we can call start()
+        mdPlayerV0.prepare(); // prepared state, we can call start()
       } catch (IOException e) {
         e.printStackTrace();
       }
       if (debug>0) Log.i("f230", "synchron " + myUri.toString());
-      mediaPlayer.start();
+      mdPlayerV0.start();
     }
   }
 

@@ -1,5 +1,6 @@
 package net.za.dyndns.gerd.deutschlandfunk;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Button;
 
@@ -31,14 +32,20 @@ public class EineSendung implements Comparable<EineSendung> { // benötigt compa
   public EineSendung(String title, String autor,
                      int seitenanzahl, int seitennummer,
                      String zeitstempel, String link, String duration, int debug) {
-
+    int sek = 0;
+    try {
+      sek = Integer.parseInt(duration);
+    } catch (NumberFormatException e) {
+      sek = 0;
+    }
+    String minSek = String.format("%d:%02d", sek / 60, sek % 60);
     this.title = title;
     this.autor = autor;
     this.seitenanzahl = seitenanzahl;
     this.seitennummer = seitennummer;
     this.zeitstempel = zeitstempel;
     this.link = link;
-    this.duration = duration;
+    this.duration = minSek;
     this.htmlDarstellung = "";
     this.debug = debug;
   }
@@ -55,15 +62,16 @@ public class EineSendung implements Comparable<EineSendung> { // benötigt compa
     this.taste = null;
     this.debug = debug;
   }
-/*
-Die Monatsnummer im zeitstempel liegt in 1..12, aber
-GregorianCalendar erwartet sie in 0..11.
- */
+
+  /*
+  Die Monatsnummer im zeitstempel liegt in 1..12, aber
+  GregorianCalendar erwartet sie in 0..11.
+   */
   private String wochentag() {
     Matcher m = sixpart.matcher(zeitstempel);
     if (m.matches()) {
       int Jahr = Integer.parseInt(m.group(1));
-      int Monat = Integer.parseInt(m.group(2))  -  1;
+      int Monat = Integer.parseInt(m.group(2)) - 1;
       int Tag = Integer.parseInt(m.group(3));
 /*
       int Stunde = Integer.parseInt(m.group(4));
@@ -72,13 +80,13 @@ GregorianCalendar erwartet sie in 0..11.
 */
       GregorianCalendar dieserTag = new GregorianCalendar(Jahr, Monat, Tag);
       int tagDerWoche = dieserTag.get(Calendar.DAY_OF_WEEK);
-    return tagesName[tagDerWoche];
+      return tagesName[tagDerWoche];
     }
     return "";
   }
 
   @Override
-  public int compareTo(EineSendung eineSendung) {  // für "implements Comparable<EineSendung>"
+  public int compareTo(@NonNull EineSendung eineSendung) {  // für "implements Comparable<EineSendung>"
     //return this.link.compareTo(eineSendung.link);
     int lastCmp = eineSendung.zeitstempel.compareTo(this.zeitstempel);
     return (lastCmp != 0 ? lastCmp : eineSendung.link.compareTo(this.link));
@@ -88,25 +96,27 @@ GregorianCalendar erwartet sie in 0..11.
   public void setTaste(Button taste) {
     this.taste = taste;
   }
-/*
-  public void machHtml(
-      boolean verweisPref,
-      boolean zeitstempelPref,
-      boolean autorPref) {
-    StringBuilder htmlInhalt = new StringBuilder("");
-    htmlInhalt.append("<p>");
-//      htmlInhalt.append(this.abspielgerät + "/");
-//      htmlInhalt.append(this.seitenanzahl + " ");
-    if (verweisPref) htmlInhalt.append(link + " ");
-    htmlInhalt.append("<a href='" + link + "'>");
-    htmlInhalt.append(title + "</a></p>");
-    // If the user set the preference to include zeitstempel text,
-    // adds it to the display.
-    if (zeitstempelPref) htmlInhalt.append("Sendezeit: " + zeitstempel);
-    if (autorPref) htmlInhalt.append(" Autor: " + autor);
-    htmlDarstellung = htmlInhalt.toString();
-  }
-*/
+
+  /*
+    public void machHtml(
+        boolean verweisPref,
+        boolean zeitstempelPref,
+        boolean autorPref) {
+      StringBuilder htmlInhalt = new StringBuilder("");
+      htmlInhalt.append("<p>");
+  //      htmlInhalt.append(this.abspielgerät + "/");
+  //      htmlInhalt.append(this.seitenanzahl + " ");
+      if (verweisPref) htmlInhalt.append(link + " ");
+      htmlInhalt.append("<a href='" + link + "'>");
+      htmlInhalt.append(title + "</a></p>");
+      // If the user set the preference to include zeitstempel text,
+      // adds it to the display.
+      if (zeitstempelPref) htmlInhalt.append("Sendezeit: " + zeitstempel);
+      if (autorPref) htmlInhalt.append(" Autor: " + autor);
+      if (durationPref) htmlInhalt.append(" Dauer: " + duration);
+      htmlDarstellung = htmlInhalt.toString();
+    }
+  */
   public String machDateiname() {
     String zwerg = link;
     zwerg = zwerg.replaceFirst(".*/.*?_", "");
@@ -114,19 +124,21 @@ GregorianCalendar erwartet sie in 0..11.
     return zwerg;
   }
 
-  public CharSequence buttontext(boolean autor, boolean zeit) {
+  public CharSequence buttontext(boolean autor, boolean zeit, boolean duration) {
     if (debug > 1)
       return ""
           + this.wochentag() + " "
           + this.seitennummer + "/"
           + this.seitenanzahl + " "
           + this.autor + " "
+          + this.duration + " "
           + this.zeitstempel + " "
           + this.title + " -> "
           + this.machDateiname();
     else
       return ""
           + this.wochentag() + " "
+          + (duration ? (this.duration + " \u2014 ") : "") // em-dash
           + (zeit ? (this.zeitstempel + " \u2014 ") : "") // em-dash
           + (autor ? (this.autor + " \u2014 ") : "") // em-dash
           + this.title;
