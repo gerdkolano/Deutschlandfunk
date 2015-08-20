@@ -1,5 +1,60 @@
 apply plugin: 'com.android.application'
 
+// beobachte in Gradle Console
+exec {
+    executable 'date'
+    args '+hanno build.gradle Datum %Y-%m-%d %H.%M.%S'
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+    def Properties versionProps = new Properties()
+    def versionPropsFile = file('hanno-version.properties')
+    if (versionPropsFile.exists())
+        versionProps.load(new FileInputStream(versionPropsFile))
+    def code = (versionProps['hanno_VERSION_CODE'] ?: "0").toInteger() + 1
+    versionProps['hanno_VERSION_CODE'] = code.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+    def hannoVersionName = "1.1"
+
+    println 'hanno Version Name und Code ' + hannoVersionName + " " + code.toString()
+
+    project.afterEvaluate {
+        println 'hanno Version und Code ' + hannoVersionName + " " + code.toString()
+        exec {
+            executable 'date'
+            args '+hanno %Y-%m-%d %H.%M.%S'
+        }
+        exec {
+            executable 'sh'
+            args 'mach-launcher.sh', 'DLF', hannoVersionName, code.toString()
+        }
+    }
+
+    defaultConfig {
+        applicationId "net.za.dyndns.gerd.deutschlandfunk"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1
+        versionName hannoVersionName + "." + code
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.1'
+}
+
+/* generierte Vorlage
+apply plugin: 'com.android.application'
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -23,3 +78,4 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
 }
+*/
